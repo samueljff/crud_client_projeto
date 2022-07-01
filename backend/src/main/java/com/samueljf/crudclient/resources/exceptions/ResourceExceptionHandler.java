@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.samueljf.crudclient.services.exceptions.DatabaseException;
 import com.samueljf.crudclient.services.exceptions.ResourceNotFoundException;
 
 @ControllerAdvice
@@ -24,5 +25,16 @@ public class ResourceExceptionHandler {
 		err.setMessage(e.getMessage());
 		err.setPath(request.getRequestURI());
 		return ResponseEntity.status(status).body(err);
+	}
+	
+	public ResponseEntity<StandardError> databaseIntegrity(DatabaseException e, HttpServletRequest request){
+		StandardError err2 = new StandardError();
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		 err2.setTimestamp(Instant.now());
+		 err2.setStatus(status.value());
+		 err2.setError("Database Integration Exception!");
+		 err2.setMessage(e.getMessage());
+		 err2.setPath(request.getRequestURI());
+		 return ResponseEntity.status(status).body(err2);
 	}
 }
